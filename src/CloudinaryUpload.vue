@@ -133,7 +133,8 @@
                     const currentProgressBar = document.querySelector(`[data-name="${file.name}"]`).nextElementSibling
 
                     // Make the request
-                    axios.addEventListener('progress', (ev) => {
+                    const xhr = new XMLHttpRequest()
+                    xhr.addEventListener('progress', (ev) => {
                         currentProgressBar.style.width = `${(ev.loaded / ev.total) * 100}%`
                     })
                     xhr.addEventListener('readystatechange', xhrComplete)
