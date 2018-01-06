@@ -1,16 +1,16 @@
 <template>
     <section class="cloudinary-upload">
         <div class="cloudinary-upload__wrapper">
-            <div class="cloudinary-upload__thumb-wrapper" v-for="file in list" :key="file.public_id || file.id" :ref="file.name">
+            <div class="cloudinary-upload__thumb-wrapper" v-for="file in list" :key="file.id" :ref="file.name">
                 <div 
                     class="cloudinary-upload__progress-bar"
                     :style="{ backgroundImage: `url(${file.url})` }"
-                    v-if="!file.public_id"
+                    v-if="!file.isUploaded"
                 ></div>
                 <img 
-                    :class="['cloudinary-upload__thumb', {'cloudinary-upload__thumb--uploaded': file.public_id}]"
+                    :class="['cloudinary-upload__thumb', {'cloudinary-upload__thumb--uploaded': file.isUploaded}]"
                     v-lazy="file.url"
-                    :alt="getAlt(file)"
+                    :alt="file.alt"
                     @click="switchDetails($event, file)"
                 >
             </div>
@@ -29,23 +29,27 @@
             <section 
                 class="cloudinary-upload__img-details" 
                 :style="{ top: this.detailsTop }"
-                v-if="activeFile.name"
+                v-if="isActiveFileNotEmpty"
             >
                 <img 
                     :src="activeFile.url"
                     class="cloudinary-upload__img-details-thumb"
-                    :alt="getAlt(activeFile)"
+                    :alt="activeFile.alt"
                 >
                 <div 
                     class="cloudinary-upload__img-details-info"
                 >
                     <label>
                         Public ID
-                        <input class="cloudinary-upload__input" :value="activeFile.public_id">
+                        <input class="cloudinary-upload__input" v-model="activeFile.public_id">
                     </label>
                     <label>
                         Tags
-                        <input class="cloudinary-upload__input" :value="activeFile.tags">
+                        <input class="cloudinary-upload__input" v-model="activeFile.tags">
+                    </label>
+                    <label>
+                        Alt
+                        <input class="cloudinary-upload__input" v-model="activeFile.alt">
                     </label>
                     <button class="cloudinary-upload__button" @click="deleteItem">Удалить</button>
                 </div>
@@ -64,8 +68,10 @@
             detailsTop: null,
             activeFile: {}
         }),
+        computed: {
+            isActiveFileNotEmpty() { return !!this.activeFile.url }
+        },
         methods: {
-            getAlt (file) { return 'Татуировка в Рязани' },
             showPreview () {
                 const files = Array.from(this.$refs.fileInput.files)
 
@@ -83,11 +89,13 @@
                 })
             },
             startUpload () {
-                const files = this.list.filter(item => !item.public_id)
+                const files = this.list.filter(item => !item.isUploaded)
 
                 files.forEach(file => {
                     let formData = new FormData()
-                    formData.append('tags', this.activeFile.tags)
+                    formData.append('public_id', this.activeFile.public_id || '')
+                    formData.append('alt', this.activeFile.alt || '')
+                    formData.append('tags', this.activeFile.tags || '')
                     formData.append('photo', file.file)
                     
                     const currentProgressBar = this.$refs[file.name][0].firstChild
@@ -98,29 +106,33 @@
                             currentProgressBar.style.width = `${(ev.loaded / ev.total) * 100}%`
                         }
                     }).then((res) => {
-                        this.list = this.list.filter(item => item.public_id)
+                        this.activeFile = {}
+                        this.list = this.list.filter(item => item.isUploaded)
                         this.list.push(res.data)
                     })
                 })
             },
             switchDetails (event, file) {
                 let isLevelTheSame
-                const isItCurrentFile = this.activeFile &&
+                const isItCurrentFile = this.isActiveFileNotEmpty &&
                     this.activeFile.public_id === file.public_id
                 const img = event.target
-                if (!isItCurrentFile && this.activeFile) {
+                const target = this.$refs[file.name] ? this.$refs[file.name][0] : img
+                if (!isItCurrentFile && this.isActiveFileNotEmpty) {
                     const { bottom } = img.getBoundingClientRect()
-                    const prevImg = document.querySelector(`[src="${this.activeFile.url}"]`)
+                    const prevImg = this.activeFile.isUploaded ? 
+                        document.querySelector(`[src="${this.activeFile.url}"]`) :
+                        this.$refs[this.activeFile.name] && this.$refs[this.activeFile.name][0]
                     isLevelTheSame = bottom === prevImg.getBoundingClientRect().bottom
                     const delay = isLevelTheSame ? 300 : 0
                     setTimeout(() => prevImg.classList.remove('active'), delay)
                 }
-                img.classList.toggle('active')
+                target.classList.toggle('active')
                 if (!isLevelTheSame) { this.activeFile = {} }
                 setTimeout(() => {
                     const { bottom } = img.getBoundingClientRect()
                     this.detailsTop = `${bottom + 5}px`
-                    this.activeFile = isItCurrentFile ? null : file
+                    this.activeFile = isItCurrentFile ? {} : file
                 }, 300)
             },
             deleteItem() {
@@ -168,15 +180,19 @@
             transition: all .3s;
             object-fit: cover;
 
+            &.active {
+                margin-bottom: 350px !important;
+            }
+
             &-wrapper {
                 position: relative;
                 width: 100px;
                 height: 100%;
                 margin: 0 10px 10px 0;
-            }
 
-            &.active {
-                margin-bottom: 350px !important;
+                &.active {
+                    margin-bottom: 350px !important;
+                }
             }
 
             &--uploaded {
@@ -203,6 +219,12 @@
             &-thumb {
                 height: 260px;
                 margin: 0 50px 0 20px;
+            }
+
+            &-info {
+                label {
+                    display: block;
+                }
             }
 
         }
@@ -232,13 +254,6 @@
             bottom: 0;
             transition: all .3s;
         }
-    }
-
-    .progress-bar {
-        background-color: green;
-        height: 10px;
-        width: 0;
-        transition: all .3s;
     }
 
     .fade-enter-active, .fade-leave-active {

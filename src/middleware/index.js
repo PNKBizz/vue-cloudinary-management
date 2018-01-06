@@ -14,10 +14,22 @@ module.exports = (name, key) => {
     const upload = multer({ storage })
 
     router.get('/api/getResourses', async (req, res) => {
-        cloudinary.v2.api.resources({ tags: true }, (error, result) => res.json(result));
+        cloudinary.v2.api.resources({ tags: true, context: true }, (error, result) => {
+            result.resources = result.resources.map(item => {
+                item.isUploaded = true
+                item.id = item.public_id
+                item.alt = item.context && item.context.custom && item.context.custom.alt 
+                return item
+            })
+            res.json(result)
+        }
+        );
     })
 
     router.post('/api/upload', upload.single('photo'), async (req, res) => {
+        req.file.isUploaded = true
+        req.file.id = req.file.public_id
+        req.file.alt = req.file.context && req.file.context.custom && req.file.context.custom.alt 
         res.json(req.file)
     })
 

@@ -6,8 +6,9 @@ class CloudinaryStorage {
     _handleFile(req, file, cb) {
         console.log(req.body);
         const params = { 
-            context: {alt: req.body.alt},
-            tags: req.body.tags
+            public_id: req.body.public_id || '',
+            context: { alt: req.body.alt || '' },
+            tags: req.body.tags || ''
         }
         const stream = this.cloudinary.v2.uploader.upload_stream(params, cb)
 
