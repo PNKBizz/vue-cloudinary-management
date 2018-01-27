@@ -207,7 +207,7 @@
 
         &__img-details {
             height: 300px;
-            position: absolute;
+            position: fixed;
             padding: 20px 0;
             left: 0;
             right: 0;

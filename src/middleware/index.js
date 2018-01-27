@@ -3,11 +3,11 @@ const cloudinary = require('cloudinary')
 const router = require('express').Router()
 const multer = require('multer')
 
-module.exports = (name, key) => {
+module.exports = (name, key, secret) => {
     cloudinary.config({
         cloud_name: name,
         api_key: key,
-        api_secret: 'kUsBB8J7G8HGYGLRq_UJVvw40Z0'
+        api_secret: secret
     })
     
     var storage = require('./cloudinaryStorage')({ cloudinary })
