@@ -1,7 +1,7 @@
 {
-  "name": "vue-cloudinary-upload",
-  "description": "A Vue.js project",
-  "version": "1.0.0",
+  "name": "vue-cloudinary-manager",
+  "description": "Isomorphic vue.js and express.js plugin for managing your cloudinary assets",
+  "version": "0.0.1",
   "author": "bizz.gc@gmail.com",
   "license": "MIT",
   "private": true,

@@ -22,8 +22,7 @@ module.exports = (name, key) => {
                 return item
             })
             res.json(result)
-        }
-        );
+        });
     })
 
     router.post('/api/upload', upload.single('photo'), async (req, res) => {
