@@ -40,17 +40,18 @@
                 >
                     <label>
                         Public ID
-                        <input class="cloudinary-upload__input" v-model="activeFile.public_id">
+                        <input class="cloudinary-upload-input" v-model="activeFile.public_id">
                     </label>
                     <label>
                         Tags
-                        <input class="cloudinary-upload__input" v-model="activeFile.tags">
+                        <input class="cloudinary-upload-input" v-model="activeFile.tags">
                     </label>
                     <label>
                         Alt
-                        <input class="cloudinary-upload__input" v-model="activeFile.alt">
+                        <input class="cloudinary-upload-input" v-model="activeFile.alt">
                     </label>
-                    <button class="cloudinary-upload__button" @click="deleteItem">Удалить</button>
+                    <button class="cloudinary-upload-button" @click="deleteItem">Удалить</button>
+                    <button class="cloudinary-upload-button" @click="updateItem" v-if="activeFile.isUploaded">Обновить</button>
                 </div>
                 <div 
                     class="get get-prev"
@@ -147,13 +148,21 @@
                 this.activeFile = file;
             },
             deleteItem() {
-                axios.post('/api/delete', {
-                    files: [this.activeFile.public_id]
-                })
-                .then(this.updateList)
-                .catch(function (error) {
-                    console.log(error);
-                }); 
+                if (this.activeFile.isUploaded) {
+                        axios.post('/api/delete', {
+                        files: [this.activeFile.public_id]
+                    })
+                    .then(this.updateList)
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    this.list = this.list.filter(item => item.url !== this.activeFile.url)
+                    this.activeFile = {};
+                }
+            },
+            updateItem() {
+                console.log('update');
             }
         },
         directives: { lazy },
@@ -189,6 +198,33 @@
             bottom: 0;
             background-color: rgba($color: #000000, $alpha: .7);
             z-index: 0;
+        }
+
+        &-input {
+            border-color: transparent;
+            border-bottom-color: #777;
+            background-color: transparent;
+            margin: 10px;
+            font-size: 15px;
+            transition: border-color .3s;
+
+            &:focus {
+                border-bottom-color: #fff;
+                outline: none;
+            }
+        }
+
+        &-button {
+            border: 1px solid white;
+            background-color: transparent;
+            color: white;
+            padding: 10px;
+            margin: 20px 10px 0 0;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #333;
+            }
         }
 
         &__wrapper {
@@ -251,6 +287,7 @@
             &-info {
                 label {
                     display: block;
+                    color: white;
                 }
             }
 
