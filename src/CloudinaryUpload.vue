@@ -27,8 +27,7 @@
         <button @click.prevent="startUpload">submit</button>
         <transition name="fade">
             <section 
-                class="cloudinary-upload__img-details" 
-                :style="{ top: this.detailsTop }"
+                class="cloudinary-upload__img-details"
                 v-if="isActiveFileNotEmpty"
             >
                 <img 
@@ -53,8 +52,24 @@
                     </label>
                     <button class="cloudinary-upload__button" @click="deleteItem">Удалить</button>
                 </div>
+                <div 
+                    class="get get-prev"
+                    v-if="activeFileIndex !== 0"
+                    @click="activeFile = list[activeFileIndex - 1]"
+                >
+                    &lt;
+                </div>
+                <div 
+                    class="get get-next"
+                    v-if="(activeFileIndex + 1) < list.length"
+                    @click="activeFile = list[activeFileIndex + 1]"
+                >
+                    &gt;
+                </div>
+                <div class="close-btn" @click="activeFile = {}">X</div>
             </section>
         </transition>
+        <div class="overlay" v-if="isActiveFileNotEmpty"></div>
     </section>
 </template>
 
@@ -65,13 +80,27 @@
     export default {
         data: () => ({
             list: null,
-            detailsTop: null,
             activeFile: {}
         }),
+        props: {
+            folder: {
+                type: String,
+                default: ''
+            }
+        },
         computed: {
-            isActiveFileNotEmpty() { return !!this.activeFile.url }
+            isActiveFileNotEmpty() { return !!this.activeFile.url },
+            activeFileIndex() { return this.list.indexOf(this.activeFile) }
         },
         methods: {
+            getResourses() {
+                axios.get(`/api/getResourses?folder=${this.folder}`)
+                .then(res => this.list = res.data.resources)
+            },
+            updateList() {
+                this.activeFile = {};
+                this.getResourses();
+            },
             showPreview () {
                 const files = Array.from(this.$refs.fileInput.files)
 
@@ -89,62 +118,50 @@
                 })
             },
             startUpload () {
+                let promiseArray = [];
                 const files = this.list.filter(item => !item.isUploaded)
 
                 files.forEach(file => {
                     let formData = new FormData()
-                    formData.append('public_id', this.activeFile.public_id || '')
-                    formData.append('alt', this.activeFile.alt || '')
-                    formData.append('tags', this.activeFile.tags || '')
+                    formData.append('public_id', file.public_id || '')
+                    formData.append('alt', file.alt || '')
+                    formData.append('tags', file.tags || '')
+                    formData.append('folder', this.folder || '')
                     formData.append('photo', file.file)
                     
                     const currentProgressBar = this.$refs[file.name][0].firstChild
 
-                    axios.post('/api/upload', formData, {
+                    promiseArray.push(axios.post('/api/upload', formData, {
                         headers: { 'Content-Type': 'multipart/form-data' },
                         onUploadProgress(ev) {
                             currentProgressBar.style.width = `${(ev.loaded / ev.total) * 100}%`
                         }
-                    }).then((res) => {
-                        this.activeFile = {}
-                        this.list = this.list.filter(item => item.isUploaded)
-                        this.list.push(res.data)
-                    })
+                    }));
+                });
+
+                Promise.all(promiseArray).then(() => {
+                    this.updateList();
                 })
             },
             switchDetails (event, file) {
-                let isLevelTheSame
-                const isItCurrentFile = this.isActiveFileNotEmpty &&
-                    this.activeFile.public_id === file.public_id
-                const img = event.target
-                const target = this.$refs[file.name] ? this.$refs[file.name][0] : img
-                if (!isItCurrentFile && this.isActiveFileNotEmpty) {
-                    const { bottom } = img.getBoundingClientRect()
-                    const prevImg = this.activeFile.isUploaded ? 
-                        document.querySelector(`[src="${this.activeFile.url}"]`) :
-                        this.$refs[this.activeFile.name] && this.$refs[this.activeFile.name][0]
-                    isLevelTheSame = bottom === prevImg.getBoundingClientRect().bottom
-                    const delay = isLevelTheSame ? 300 : 0
-                    setTimeout(() => prevImg.classList.remove('active'), delay)
-                }
-                target.classList.toggle('active')
-                if (!isLevelTheSame) { this.activeFile = {} }
-                setTimeout(() => {
-                    const { bottom } = img.getBoundingClientRect()
-                    this.detailsTop = `${bottom + 5}px`
-                    this.activeFile = isItCurrentFile ? {} : file
-                }, 300)
+                this.activeFile = file;
             },
             deleteItem() {
                 axios.post('/api/delete', {
                     files: [this.activeFile.public_id]
                 })
+                .then(this.updateList)
                 .catch(function (error) {
                     console.log(error);
                 }); 
             }
         },
         directives: { lazy },
+        watch: {
+            folder() {
+                this.getResourses();
+            }
+        },
         mounted () {
             window.onresize = () => {
                 const img = document.querySelector('.active')
@@ -154,8 +171,7 @@
                 }
             }
 
-            axios.get('/api/getResourses')
-                .then(res => this.list = res.data.resources)
+            this.getResourses();
         }
     }
 </script>
@@ -164,6 +180,16 @@
     .cloudinary-upload {
         margin: 20px;
         position: relative;
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba($color: #000000, $alpha: .7);
+            z-index: 0;
+        }
 
         &__wrapper {
             display: flex;
@@ -207,14 +233,15 @@
 
         &__img-details {
             height: 300px;
+            width: 70vw;
             position: fixed;
             padding: 20px 0;
-            left: 0;
-            right: 0;
+            left: 15vw;
             display: flex;
             flex-wrap: wrap;
-            overflow: auto;
             background-color: gray;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba($color: #000000, $alpha: .7);
 
             &-thumb {
                 height: 260px;
@@ -227,12 +254,64 @@
                 }
             }
 
+            .get {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 30px;
+                background-color: darkgray;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 30px;
+                cursor: pointer;
+                box-shadow: 0 0 10px rgba($color: #000000, $alpha: .7);
+
+                &-prev {
+                    left: -30px;
+                }
+
+                &-next {
+                    right: -30px;
+                }
+            }
+
+            .close-btn {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 30px;
+                color: white;
+                cursor: pointer;
+                z-index: 3;
+            }
+
         }
 
         &__addFiles {
             background-color: gray;
             width: 100px;
             height: 100px;
+            position: relative;
+            cursor: pointer;
+
+            &:after {
+                content: '+';
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 60px;
+            }
 
             input {
                 display: none;

@@ -8,7 +8,8 @@ class CloudinaryStorage {
         const params = { 
             public_id: req.body.public_id || '',
             context: { alt: req.body.alt || '' },
-            tags: req.body.tags || ''
+            tags: req.body.tags || '',
+            folder: req.body.folder || ''
         }
         const stream = this.cloudinary.v2.uploader.upload_stream(params, cb)
 

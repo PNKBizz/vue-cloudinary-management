@@ -14,13 +14,17 @@ module.exports = (name, key, secret) => {
     const upload = multer({ storage })
 
     router.get('/api/getResourses', async (req, res) => {
-        cloudinary.v2.api.resources({ tags: true, context: true }, (error, result) => {
-            result.resources = result.resources.map(item => {
-                item.isUploaded = true
-                item.id = item.public_id
-                item.alt = item.context && item.context.custom && item.context.custom.alt 
-                return item
-            })
+        cloudinary.v2.api.resources({ tags: true, context: true, prefix: req.query.folder && `${req.query.folder}/`, type: 'upload' }, (error, result) => {
+            if (error) res.status(500).send(error);
+            console.log(result);
+            if (result) {
+                result.resources = result.resources.map(item => {
+                    item.isUploaded = true
+                    item.id = item.public_id
+                    item.alt = item.context && item.context.custom && item.context.custom.alt 
+                    return item
+                })
+            }
             res.json(result)
         });
     })
