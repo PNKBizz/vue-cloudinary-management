@@ -1,1 +1,1 @@
-module.exports = typeof window === 'undefined' ? require('./middleware') : require('./main.client.js')
+module.exports = typeof window === 'undefined' ? require('./middleware') : require('../dist/build.js')

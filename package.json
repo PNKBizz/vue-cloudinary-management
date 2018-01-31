@@ -1,12 +1,13 @@
 {
   "name": "vue-cloudinary-manager",
   "description": "Isomorphic vue.js and express.js plugin for managing your cloudinary assets",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "bizz.gc@gmail.com",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "prepublish": "npm run build"
   },
   "browser": {
     "./src/middleware/index.js": false
@@ -31,17 +32,19 @@
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
     "node-sass": "^4.5.3",
+    "rollup": "^0.41.4",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^2.1.1",
+    "rollup-plugin-uglify": "1.0.1",
+    "rollup-plugin-vue": "^2.4.2",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.13",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-node-externals": "^1.6.0",
-    "rollup": "^0.41.4",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-resolve": "^2.1.1",
-    "rollup-plugin-uglify": "1.0.1",
-    "rollup-plugin-vue": "^2.4.2"
+    "webpack-node-externals": "^1.6.0"
   }
 }
