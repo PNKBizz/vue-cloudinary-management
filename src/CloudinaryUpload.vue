@@ -24,7 +24,7 @@
                 >
             </label>    
         </div>
-        <button @click.prevent="startUpload">submit</button>
+        <button @click.prevent="startUpload" class="cloudinary-upload-button">Загрузить</button>
         <transition name="fade">
             <section 
                 class="cloudinary-upload__img-details"
@@ -216,7 +216,7 @@
 
         &-button {
             border: 1px solid white;
-            background-color: transparent;
+            background-color: gray;
             color: white;
             padding: 10px;
             margin: 20px 10px 0 0;
