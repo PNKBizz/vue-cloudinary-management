@@ -1,13 +1,13 @@
 {
   "name": "vue-cloudinary-manager",
   "description": "Isomorphic vue.js and express.js plugin for managing your cloudinary assets",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "bizz.gc@gmail.com",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build"
   },
   "browser": {
     "./src/middleware/index.js": false
