@@ -1,12 +1,12 @@
 {
   "name": "vue-cloudinary-manager",
   "description": "Isomorphic vue.js and express.js plugin for managing your cloudinary assets",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "author": "bizz.gc@gmail.com",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build": "rollup -c",
     "prepublish": "npm run build"
   },
   "browser": {
@@ -37,8 +37,9 @@
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^2.1.1",
+    "rollup-plugin-scss": "^0.4.0",
     "rollup-plugin-uglify": "1.0.1",
-    "rollup-plugin-vue": "^2.4.2",
+    "rollup-plugin-vue2": "^0.8.0",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.13",
     "vue-loader": "^13.0.5",
