@@ -8,11 +8,15 @@ import scss from 'rollup-plugin-scss';
 import builtins from 'rollup-plugin-node-builtins';
 
 export default {
+  external: ['axios'],
   input: './src/main.client.js',
   output: {
     file: './dist/build.js',
     format: 'umd',
-    name: 'vueCloudinaryUpload'
+    name: 'vueCloudinaryUpload',
+    globals: {
+      'axios': 'axios'
+    }
   },
   plugins: [
     vue(),
