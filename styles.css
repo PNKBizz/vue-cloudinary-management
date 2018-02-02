@@ -1,0 +1,140 @@
+.cloudinary-upload {
+  margin: 20px;
+  position: relative; }
+  .cloudinary-upload .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 0; }
+  .cloudinary-upload-input {
+    border-color: transparent;
+    border-bottom-color: #777;
+    background-color: transparent;
+    margin: 10px;
+    font-size: 15px;
+    transition: border-color .3s; }
+    .cloudinary-upload-input:focus {
+      border-bottom-color: #fff;
+      outline: none; }
+  .cloudinary-upload-button {
+    border: 1px solid white;
+    background-color: gray;
+    color: white;
+    padding: 10px;
+    margin: 20px 10px 0 0;
+    cursor: pointer; }
+    .cloudinary-upload-button:hover {
+      background-color: #333; }
+  .cloudinary-upload__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 10px 20px 0;
+    border-bottom: 1px solid gray; }
+  .cloudinary-upload__thumb {
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    opacity: .4;
+    transition: all .3s;
+    object-fit: cover; }
+    .cloudinary-upload__thumb.active {
+      margin-bottom: 350px !important; }
+    .cloudinary-upload__thumb-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100%;
+      margin: 0 10px 10px 0; }
+      .cloudinary-upload__thumb-wrapper.active {
+        margin-bottom: 350px !important; }
+    .cloudinary-upload__thumb--uploaded {
+      opacity: 0;
+      transition: .5s opacity; }
+      .cloudinary-upload__thumb--uploaded[src] {
+        opacity: 1; }
+  .cloudinary-upload__img-details {
+    height: 300px;
+    width: 70vw;
+    position: fixed;
+    padding: 20px 0;
+    left: 15vw;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: gray;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7); }
+    .cloudinary-upload__img-details-thumb {
+      height: 260px;
+      margin: 0 50px 0 20px; }
+    .cloudinary-upload__img-details-info label {
+      display: block;
+      color: white; }
+    .cloudinary-upload__img-details .get {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      background-color: darkgray;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7); }
+      .cloudinary-upload__img-details .get-prev {
+        left: -30px; }
+      .cloudinary-upload__img-details .get-next {
+        right: -30px; }
+    .cloudinary-upload__img-details .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      z-index: 3; }
+  .cloudinary-upload__addFiles {
+    background-color: gray;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    cursor: pointer; }
+    .cloudinary-upload__addFiles:after {
+      content: '+';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: 60px; }
+    .cloudinary-upload__addFiles input {
+      display: none; }
+  .cloudinary-upload__upload-wrapper {
+    position: relative;
+    margin: 0 10px 10px 0; }
+  .cloudinary-upload__progress-bar {
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transition: all .3s; }
+
+.fade-enter-active, .fade-leave-active {
+  transition: all .2s; }
+
+.fade-enter, .fade-leave-to {
+  height: 0;
+  opacity: 0; }

@@ -24,7 +24,7 @@
                 >
             </label>    
         </div>
-        <button @click.prevent="startUpload" class="cloudinary-upload-button">Загрузить</button>
+        <button @click.prevent="startUpload" class="cloudinary-upload-button">Upload</button>
         <transition name="fade">
             <section 
                 class="cloudinary-upload__img-details"
@@ -50,8 +50,8 @@
                         Alt
                         <input class="cloudinary-upload-input" v-model="activeFile.alt">
                     </label>
-                    <button class="cloudinary-upload-button" @click="deleteItem">Удалить</button>
-                    <button class="cloudinary-upload-button" @click="updateItem" v-if="activeFile.isUploaded">Обновить</button>
+                    <button class="cloudinary-upload-button" @click="deleteItem">Delete</button>
+                    <button class="cloudinary-upload-button" @click="updateItem" v-if="activeFile.isUploaded">Update</button>
                 </div>
                 <div 
                     class="get get-prev"

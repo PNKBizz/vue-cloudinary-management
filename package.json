@@ -1,7 +1,7 @@
 {
   "name": "vue-cloudinary-manager",
   "description": "Isomorphic vue.js and express.js plugin for managing your cloudinary assets",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "bizz.gc@gmail.com",
   "main": "index.js",
   "license": "MIT",
@@ -25,27 +25,21 @@
   ],
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
-    "file-loader": "^1.1.4",
     "node-sass": "^4.5.3",
-    "rollup": "^0.41.4",
+    "rollup": "^0.55.3",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-json": "^2.3.0",
-    "rollup-plugin-node-resolve": "^2.1.1",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-scss": "^0.4.0",
-    "rollup-plugin-uglify": "1.0.1",
+    "rollup-plugin-uglify": "^3.0.0",
     "rollup-plugin-vue2": "^0.8.0",
-    "sass-loader": "^6.0.6",
     "vue": "^2.5.13",
-    "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1",
-    "webpack-node-externals": "^1.6.0"
+    "vue-template-compiler": "^2.4.4"
   }
 }

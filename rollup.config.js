@@ -4,7 +4,8 @@ import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 import commonjs from 'rollup-plugin-commonjs';
 import rollupJson from 'rollup-plugin-json';
-import scss from 'rollup-plugin-scss'
+import scss from 'rollup-plugin-scss';
+import builtins from 'rollup-plugin-node-builtins';
 
 export default {
   input: './src/main.client.js',
@@ -16,7 +17,8 @@ export default {
   plugins: [
     vue(),
     scss({ output: 'styles.css' }),
-    resolve({ jsnext: true, main: true, browser: true }),
+    builtins(),
+    resolve({ jsnext: true, main: true, browser: true, preferBuiltins: true }),
     commonjs({
       include: 'node_modules/**'
     }),
