@@ -162,7 +162,13 @@
                 }
             },
             updateItem() {
-                console.log('update');
+                axios.post('/api/update', {
+                    file: this.activeFile.public_id,
+                    updates: {
+                        context: { alt: this.activeFile.alt || '' },
+                        tags: this.activeFile.tags || ''
+                    }
+                }).then(this.updateList)
             }
         },
         directives: { lazy },
@@ -170,17 +176,6 @@
             folder() {
                 this.getResourses();
             }
-        },
-        mounted () {
-            window.onresize = () => {
-                const img = document.querySelector('.active')
-                if (img) {
-                    const { bottom } = img.getBoundingClientRect()
-                    this.detailsTop = `${bottom + 5}px`
-                }
-            }
-
-            this.getResourses();
         }
     }
 </script>
@@ -272,6 +267,7 @@
             width: 70vw;
             position: fixed;
             padding: 20px 0;
+            top: 10vh;
             left: 15vw;
             display: flex;
             flex-wrap: wrap;

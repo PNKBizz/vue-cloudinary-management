@@ -45,5 +45,16 @@ module.exports = (name, key, secret) => {
             });
     })
 
+    router.post('/api/update', async (req, res) => {
+        cloudinary.v2.api.update(
+            req.body.file, 
+            req.body.updates,
+            (error, result) => {
+                console.log(result)
+                console.log(error)
+                res.send(result)
+            });
+    })
+
     return router
 }
