@@ -59,6 +59,7 @@
     width: 70vw;
     position: fixed;
     padding: 20px 0;
+    top: 10vh;
     left: 15vw;
     display: flex;
     flex-wrap: wrap;
